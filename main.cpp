@@ -9,6 +9,12 @@ class BigDecimal {
 public :
     //Constructor
     BigDecimal() = default;
+    
+    BigDecimal(int num_param){
+        num = std::to_string(num_param);
+        sign = num[0];
+        size = num.size();
+    }
     BigDecimal(std::string num_param){
         num = num_param;
         sign = num_param[0];
