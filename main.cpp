@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <regex>
+using namespace std;
 
 class BigDecimal {
     //Member variables
@@ -73,7 +74,68 @@ public :
     }
 
     //operators methods
-
+    
+   friend ostream &operator<<(ostream &output, BigDecimal &x) {
+        output << x.num;
+        return output;
+    }
+    
+     bool operator>(BigDecimal &dec2) {
+        if (dec2.num[0] == '-' && num[0] == '+') { 
+            return true; 
+        } else if (num[0] == '-' && dec2.num[0] == '+') {
+            return false;
+        } else if (num[0] == '+' && dec2.num[0] == '+') {
+            if (num.length() < dec2.num.length()) {
+                return false;
+            }
+            for (int i = 0; i < num.length(); i++) {
+                if (num[i] > dec2.num[i]) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else if (num[0] == '-' && dec2.num[0] == '-') {
+            if (num.length() < dec2.num.length()) {
+                return true;
+            }
+            for (int i = 0; i < num.length(); i++) {
+                if (num[i] < dec2.num[i]) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+     int sgn()
+    {
+        if(num[0]=='+')
+        {
+            return 1;
+        }
+        else if(num[0]=='-')
+        {
+            return 0;
+        }
+    }
+    int sze()
+    {
+        return num.length();
+    } 
+    
+    bool operator==(BigDecimal a)
+    {
+        for (int i = 0; i < num.length(); ++i) {
+            if (num == a.num) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 
 };
 
