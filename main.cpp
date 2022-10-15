@@ -29,8 +29,9 @@ public :
     explicit BigDecimal(std::string num_param){
         std::regex filter("(\\+|-)?[0-9]+");
         if (!std::regex_match(num_param,filter)) {
+            // throws error if the input is invalid (to make it a real BigDecimal class) 
             throw std::invalid_argument("number");
-            // or throw std::out_of_range("month");
+            
         }
         else{
             if (num_param[0] == '+' || num_param[0] == '-') {
