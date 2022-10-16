@@ -125,6 +125,53 @@ public :
         }
         return res;
     }
+    
+       bool operator==(BigDecimal a)
+    {
+        for (int i = 0; i < num.length(); ++i) {
+            if (num == a.num) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+     bool operator>(BigDecimal &dec2) {
+        if (dec2.num[0] == '-' && num[0] == '+') {
+            return true;
+        } else if (num[0] == '-' && dec2.num[0] == '+') {
+            return false;
+        } else if (num[0] == '+' && dec2.num[0] == '+') {
+            if (num.length() < dec2.num.length()) {
+                return false;
+            }
+            for (int i = 0; i < num.length(); i++) {
+                if (num[i] > dec2.num[i]) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else if (num[0] == '-' && dec2.num[0] == '-') {
+            if (num.length() < dec2.num.length()) {
+                return true;
+            }
+            for (int i = 0; i < num.length(); i++) {
+                if (num[i] < dec2.num[i]) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+    
+       friend ostream &operator<<(ostream &output, BigDecimal &x) {
+        output << x.num;
+        return output;
+    }
+
 
 };
 
