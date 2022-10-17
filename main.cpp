@@ -191,18 +191,6 @@ public :
     {
         return num.length();
     }
-    bool operator==(BigDecimal a)
-    {
-        for (int i = 0; i < num.length(); ++i) {
-            if (num == a.num) {
-                continue;
-            } else {
-                return false;
-            }
-        }
-        return true;
-    }
-
 
 };
 
