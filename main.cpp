@@ -3,52 +3,41 @@
 #include <regex>
 using namespace std;
 
-class BigDecimal
-{
-    // Member variables
-    string num{"0"};
+class BigDecimal {
+    //Member variables
+    std::string num{"0"};
     size_t size{1};
     char sign{'+'};
 
-public:
-    // Constructor to_string
+public :
+    //Constructor to_string
     BigDecimal() = default;
 
-    explicit BigDecimal(int num_param)
-    {
+    explicit BigDecimal(int num_param){
 
-        num = to_string(num_param);
-        if (num[0] == '+' || num[0] == '-')
-        {
+        num = std::to_string(num_param);
+        if (num[0] == '+' || num[0] == '-') {
             sign = num[0];
             num = num.substr(1);
             size = num.size();
         }
-        else
-        {
+        else{
             sign = '+';
             size = num.size();
         }
     }
 
-    explicit BigDecimal(string num_param)
-    {
-        regex filter("(\\+|-)?[0-9]+");
-        if (!regex_match(num_param, filter))
-        {
-            throw invalid_argument("number");
-            // or throw std::out_of_range("month");
+    explicit BigDecimal(std::string num_param){
+        std::regex filter("(\\+|-)?[0-9]+");
+        if (!std::regex_match(num_param,filter)) {
+            throw std::invalid_argument("number");
         }
-        else
-        {
-            if (num_param[0] == '+' || num_param[0] == '-')
-            {
-                sign = num_param[0];
+        else{
+            if (num_param[0] == '+' || num_param[0] == '-') {
                 num = num_param.substr(1);
+                sign = num_param[0];
                 size = num.size();
-            }
-            else
-            {
+            } else {
                 num = num_param;
                 sign = '+';
                 size = num.size();
@@ -56,40 +45,7 @@ public:
         }
     }
 
-    // getter methods
-
-    get_size()
-    {
-        return size;
-    }
-    char get_sign()
-    {
-        return sign;
-    }
-    string get_num()
-    {
-        while (num[0] == '0' && num.length() > 1)
-        {
-            num = num.substr(1);
-        }
-        return num;
-    }
-
-    // Setter methods
-    void set_sign(char sign_param)
-    {
-        sign = sign_param;
-    }
-    void set_size(int size_param)
-    {
-        size = size_param;
-    }
-    void set_num(string num_param)
-    {
-        num = num_param;
-    }
-
-    // Functions (methods)
+    //Functions (methods)
     void sizeBalance(string &str1, string &str2)
     {
         string zero{"0"};
@@ -129,12 +85,15 @@ public:
         return res;
     }
 
-    string subtract_strNums(string str1, string str2)
-    {
-        int number1, number2;
+    string subtract_strNums(string str1, string str2){
+        int number1{}, number2{};
         string first_num, second_num, result = "";
         char s = '+';
-        for (int i = 0; i < size; i++)
+        if (str1 == str2){
+            result = "+0";
+            return result;
+        }
+        for (int i = 0; i < str1.size(); i++)
         {
             if ((str1[i] - '0') > (str2[i] - '0'))
             {
@@ -151,7 +110,7 @@ public:
             }
         }
 
-        for (int i = size - 1; i > -1; --i)
+        for (int i = str1.size() - 1; i > -1; --i)
         {
             number1 = first_num[i] - '0';
             number2 = second_num[i] - '0';
@@ -203,61 +162,113 @@ public:
             }
         }
     }
-    // operators methods
-    BigDecimal operator+(BigDecimal &num2)
+    //getter methods
+    char sign_()
     {
+        return sign;
+    }
+
+    int size_()
+    {
+        return size;
+    }
+
+
+    //operators methods
+    BigDecimal operator + (BigDecimal num2) {
+        BigDecimal res{"0"};
         sizeBalance(this->num, num2.num);
 
-        BigDecimal res{"0"};
-
-        if (this->sign == '+' && num2.sign == '+')
-        {
+        if (this->sign == '+' && num2.sign == '+'){
             res.sign = '+';
-            sizeBalance(this->num, num2.num);
             res.num = adding_strNums(this->num, num2.num);
-            cout << res.num << endl;
+            std::cout << res.num << std::endl;
+            res.size = res.num.size();
         }
-        else if (this->sign == '-' && num2.sign == '-')
-        {
+        else if (this->sign == '-' && num2.sign == '-') {
             res.sign = '-';
-            sizeBalance(this->num, num2.num);
             res.num = adding_strNums(this->num, num2.num);
-            cout << res.num << endl;
+            std::cout << res.num << std::endl;
+            res.size = res.num.size();
         }
-        else
-        {
-            bool x = Is_1stNum_Greater(num, num2.num);
-            if (x)
-            {
-                res.sign = '-';
-                res.num = subtract_strNums(num, num2.num);
+        else{
+            if (this->sign == '-'){
+                res.num = subtract_strNums(num2.num, this->num);
+                res.sign = res.num[0];
                 res.num = res.num.substr(1);
                 res.size = res.num.length();
-            }
-            else if (!x)
-            {
-                res.sign = '+';
-                res.num = subtract_strNums(num2.num, num);
+            }else{
+                res.num = subtract_strNums(this->num, num2.num);
+                res.sign = res.num[0];
                 res.num = res.num.substr(1);
                 res.size = res.num.length();
-            }
-            else
-            {
-                res.sign = '+';
-                res.num = "0";
-                res.size = 1;
             }
         }
         return res;
     }
+
+       bool operator==(BigDecimal a)
+    {
+        for (int i = 0; i < num.length(); ++i) {
+            if (num == a.num) {
+                continue;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+     bool operator>(BigDecimal &dec2) {
+        if (dec2.sign == '-' && sign == '+') {
+            return true;
+        } else if (sign == '-' && dec2.sign == '+') {
+            return false;
+        } else if (sign == '+' && dec2.sign == '+') {
+            if (num.length() < dec2.num.length()) {
+                return false;
+            }
+            for (int i = 0; i < num.length(); i++) {
+                if (num[i] > dec2.num[i]) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else if (sign == '-' && dec2.sign == '-') {
+            if (num.length() < dec2.num.length()) {
+                return true;
+            }
+
+            for (int i = 0; i < num.length(); i++) {
+                if (num[i] < dec2.num[i]) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+       friend std::ostream &operator<<(std::ostream &output, BigDecimal &x) {
+           while (x.num[0] == '0' && x.num.length() > 1)
+           {
+               x.num = x.num.substr(1);
+           }
+        if (x.sign == '-'){
+            output << "-";
+        }
+        output << x.num;
+        return output;
+    }
+
     BigDecimal operator-(BigDecimal &num2)
     {
         BigDecimal res;
-        sizeBalance(num, num2.num);
+        sizeBalance(this->num, num2.num);
 
         if (sign == '+' && num2.sign == '+')
         {
-
             res.num = subtract_strNums(num, num2.num);
             res.sign = res.num[0];
             res.num = res.num.substr(1);
@@ -278,48 +289,34 @@ public:
         }
         else if (sign == '-' && num2.sign == '-')
         {
-            bool x = Is_1stNum_Greater(num, num2.num);
-
-            if (x)
-            {
+            res.num = subtract_strNums(num, num2.num);
+            if (res.num[0] == '+'){
                 res.sign = '-';
-                res.num = subtract_strNums(num, num2.num);
-                res.num = res.num.substr(1);
-                res.size = res.num.length();
+            } else{
+                res.sign = '+' ;
             }
-            else if (!x)
-            {
-                res.sign = '+';
-                res.num = subtract_strNums(num2.num, num);
-                res.num = res.num.substr(1);
-                res.size = res.num.length();
-            }
-            else
-            {
-                res.sign = '+';
-                res.num = "0";
-                res.size = 1;
-            }
-        }
+            //res.sign = res.num[0];
+            res.num = res.num.substr(1);
+            res.size = res.num.length();        }
         return res;
     }
+
 };
 
-int main()
-{
-
-    BigDecimal num1("-23690");
-    BigDecimal num2("00690");
-    BigDecimal num4(num2 + num1);
-
-    cout << num4.get_sign() << num4.get_num();
-    return 0;
-}
-
-/*std::cout << "num1 = " << num1 << std::endl;
-std::cout << "num2 = " << num2 << estd::ndl;
+int main() {
+    BigDecimal num1("5");
+    BigDecimal num2("+3");
+    BigDecimal num3("-2");
+    BigDecimal num4 = num2 + num1;
+    BigDecimal num5 = num2 - num1;
+    cout << "num1 = " << num1 << endl;
+    cout << "num2 = " << num2 << endl;
 //Next statement will print 236913578023691357802369135780
-std::cout << "num2 + num1 = " << num4 << std::endl;
+    cout << "num2 + num1 = " << num4 << endl;
 //Next statement will print -313456789011345678901134567890
-std::cout << "num2 - num1 = " << std::num5 << std::endl;
-*/
+    cout << "num2 - num1 = " << num5 << endl;
+
+
+    return 0;
+
+}
