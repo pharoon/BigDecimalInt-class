@@ -1,2 +1,2 @@
-# OOP-assign.1
-dig decimal int program 
+# BigDecimalInt class
+big decimal int program 
